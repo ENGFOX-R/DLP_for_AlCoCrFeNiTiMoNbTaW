@@ -53,7 +53,7 @@ This repository provides the trained Deep Learning Potential (DLP) model, traini
 - Full 54,000-frame database archive can be reproduced using the provided configurations or requested upon need.
 
 ### 4. LAMMPS Tensile Simulation Scripts (`tension/M1/`, `tension/M2/`)
-- Input scripts (`tension_simulation.in`) for uniaxial tensile deformation along the z-direction at 300 K under constant engineering strain rate ($1.0 \times 10^8\text{ s}^{-1}$ or $1.0 \times 10^9\text{ s}^{-1}$).
+- Input scripts (`tension_simulation.in`) for uniaxial tensile deformation along the z-direction at 300 K under a constant engineering strain rate of $2.0 \times 10^8\text{ s}^{-1}$.
 - Utilizes the `pair_style deepmd` plugin interface.
 - Implements NPT relaxation followed by non-equilibrium tensile deformation with periodic boundary conditions.
 
@@ -97,4 +97,3 @@ If you use this potential, training data, or simulation setups in your research,
 ```
 
 - **GitHub Repository**: [https://github.com/ENGFOX-R/DLP_for_AlCoCrFeNiTiMoNbTaW](https://github.com/ENGFOX-R/DLP_for_AlCoCrFeNiTiMoNbTaW)
-- **Zenodo DOI**: *(Minted upon repository release; see instructions below)*
