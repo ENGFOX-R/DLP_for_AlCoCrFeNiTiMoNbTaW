@@ -1,0 +1,253 @@
+
+#This lammps script allows you to do the tensile simulation 
+#developed by Prof. Shin-Pon Ju at NSYSU 2025/02/16
+
+
+#define parameters here
+plugin load libdeepmd_lmp.so #for deepmd-v3 only
+
+variable folder index HEA_Tension
+variable samplepxx equal pxx
+variable samplepyy equal pyy
+variable samplepzz equal pzz
+variable currentT equal 300.0
+variable ts equal 0.001 # for units metal: 1fs 
+variable pdamp equal ${ts}*1000
+variable tdamp equal ${ts}*100
+# shell rmdir ${folder}
+# shell mkdir ${folder}
+shell mkdir output_restart ### 20260615_add
+
+#INITIALIZATION
+
+units metal 
+dimension 3 
+boundary p p p 
+atom_style atomic
+atom_modify map array
+# ---------- Create Atoms or read the data file ---------------------
+# read_data	out-fcc-Al04Co33Cr22Fe15Mo01Nb01Ni25Ta01Ti02W01_out_paper_expRATIO_supC111122_10648atoms.data
+# shell cd ../home/kunlin/Tension_simulation/tension_dp_train_new_use_UMA_data_v3_se_a_Fitting_net_160_only_selfCreate_B_delHCP_ZBL_1p8_DLP2p0_continue/structure/
+# read_data ../structure/00loop_96.data
+# read_data /home/kunlin/Tension_simulation/tension_dp_train_new_use_UMA_data_v3_se_a_Fitting_net_160_only_selfCreate_B_delHCP_ZBL_1p8_DLP2p0_continue/structure/00loop_96.data
+read_data /home/kunlin/Tension_simulation/tension_dp_train_new_use_UMA_data_v3_se_a_Fitting_net_160_only_selfCreate_B_delHCP_ZBL_1p8_DLP2p0_continue/out-fcc-Al04Co33Cr22Fe15Mo01Nb01Ni25Ta01Ti02W01_out_paper_expRATIO_supC111122_10648atoms/HEA_Tension/00loop_96.data
+#read_data	./SnTe_mp-1883-T50-P0.data
+
+#replicate 2 3 5
+write_data dup_1_1_25.data #if needed
+
+# ---------- Define Interatomic Potential --------------------- 
+pair_style deepmd /home/kunlin/DLP_training_script_260126v_from195cluster/dp_train_new_use_UMA_data_v3_se_a_Fitting_net_160_only_selfCreate_B_delHCP_ZBL/dp_train/graph01/graph-compress01.pb
+pair_coeff * *  
+############jump ${jumpname} npt2    ################
+
+neighbor 1 bin 
+neigh_modify delay 10 every 5 check yes 
+
+# # #========================= minimize ===================
+# # # 建立輸出目錄
+# # shell rmdir   setforce_data
+# # shell mkdir  setforce_data
+# # shell rmdir   min_data
+# # shell mkdir  min_data
+
+# # thermo 100
+# # thermo_style custom step temp pe press vol density  pxx pyy pzz lx ly lz
+# # fix freeze_atoms all setforce 0.0 0.0 0.0
+# # fix box_relax all box/relax iso 0.0 nreset 50
+# # dump setforce all custom 100 setforce_data/config*.cfg id type x y z
+# # minimize 0.0 0.0 20000 20000
+# # unfix freeze_atoms
+# # unfix box_relax
+# # undump setforce
+# # write_data after_setforce.data
+
+# # reset_timestep 0
+# # fix 5 all box/relax  z 0.0 
+# # min_style  cg
+# # thermo 100
+# # thermo_style custom step temp  density pxx  pyy  pzz pe press
+# # dump min all custom 100 min_data/config*.cfg id type x y z
+# # minimize 0 0 20000 20000
+# # unfix 5
+# # undump min
+# # write_data minimized.data
+
+
+
+# # #NPT
+# # timestep ${ts}
+
+# # shell cd ${folder}
+# # velocity all create ${currentT} 12345 mom yes rot yes dist gaussian
+# # velocity all scale ${currentT}
+
+# # reset_timestep 0
+# # fix 1 all npt temp ${currentT} ${currentT} ${tdamp} z 0.0 0.0 ${pdamp}
+# # #fix 1 all npt temp ${currentT} ${currentT} ${tdamp} aniso 0.0 0.0 ${pdamp}
+# # thermo 200  
+# # thermo_style custom step temp density pxx pyy pzz pe  cella cellb cellc pe 
+# # dump 1 all custom 1000 00NPT1_*.cfg id type x y z
+# # run 10000
+# # unfix 1
+# # undump 1
+# # write_data  NPT1.data 
+
+# # shell cd .. 
+
+# # # ----- Find the initial structure-------
+
+# # variable lztemp equal lz
+
+# # ###If using dynamics way, setting initial velocity for 300 K
+
+# # # dynamical way
+
+# # #fix 1 all nve
+# # #fix 2 all temp/rescale 1 ${currentT} ${currentT} 1 1
+# # #fix 3 all press/berendsen x 0.0 0.0 ${pdamp} y 0.0 0.0 ${pdamp} z -800.0 -800.0 ${pdamp} modulus 1000 #making it a little compressed
+
+# # shell cd ${folder}
+
+# # reset_timestep 0
+# # fix 1 all npt temp ${currentT} ${currentT} ${tdamp} z 10.0 10.0 ${pdamp}
+# # #fix 1 all npt temp ${currentT} ${currentT} ${tdamp} x 0.0 0.0 ${pdamp} y 0.0 0.0 ${pdamp} z 500.0 500.0 ${pdamp}
+# # thermo 100
+# # thermo_style custom step temp lz pxx pyy pzz  
+# # dump 2 all custom 500 00NPT4tesion_*.cfg id type x y z
+# # run 5000  
+
+# # unfix 1
+# # #unfix 2
+# # #unfix 3
+# # undump 2
+
+# # write_data  NPT2.data 
+
+# # shell cd .. 
+
+######get the refernce length
+
+# variable lz equal lz
+# variable tmp equal "lz"
+# variable L0 equal ${tmp}
+# variable tenratio equal 0.001                 #######################
+# variable strain equal "(lz - v_L0)/v_L0"
+# variable p1 equal "v_strain"
+# variable currentzlo equal zlo
+
+###continue from here for tension simulation
+variable lz equal lz
+# variable tmp equal "lz"
+variable L0 equal 83.0403158568471
+variable tenratio equal 0.001                   #######################
+variable strain equal "(lz - v_L0)/v_L0"
+variable p1 equal "v_strain"
+variable currentzlo equal 3.02434207157564
+
+######## tensile simulation from here #######
+
+# variable i loop 1000 ##tension loop begin
+variable i loop 97 1000 ##tension loop begin
+
+label tension_i
+
+variable zten equal ${L0}+(${tenratio}*${L0})*(${i}-1)+${currentzlo}
+change_box all z final ${currentzlo} ${zten} remap units box
+
+#####The following is for relaxation
+
+# dynamical way
+
+reset_timestep 0
+variable totalE equal pe
+
+shell cd ${folder}
+
+#fix 1 all nve
+fix 1 all nvt temp ${currentT} ${currentT} ${tdamp}       ##########modify
+#fix 1 all npt temp ${currentT} ${currentT} ${tdamp} x 0.0 0.0 ${pdamp} y 0.0 0.0 ${pdamp}       ##########modify
+#fix 2 all temp/rescale 1 ${currentT} ${currentT} 1 1
+#fix 3 all press/berendsen x 0.0 0.0 ${pdamp} y 0.0 0.0 ${pdamp} modulus 1000 #making it a little compressed
+thermo 100 
+thermo_style custom step temp pe lz pzz v_p1 v_totalE
+dump 1 all custom 200 Equstress_${i}_*.cfg id type x y z
+
+run 3000     #2500
+unfix 1
+undump 1
+#unfix 2
+#unfix 3
+
+#####The following is to dump cfg for sampling (10 cfg files)
+
+#shell cd ${folder}
+
+# dynamical way
+
+#reset_timestep 0
+
+#fix 1 all nve
+#fix 2 all temp/rescale 1 ${currentT} ${currentT} 1 1
+#fix 3 all press/berendsen x 0.0 0.0 ${pdamp} y 0.0 0.0 ${pdamp} modulus 1000 #making it a little compressed
+
+# end of dynamical way
+
+reset_timestep 0
+
+# end of statics way
+fix 1 all nvt temp ${currentT} ${currentT} ${tdamp} #  x 0.0 0.0 ${pdamp} y 0.0 0.0 ${pdamp}      ##########modify
+#fix 1 all npt temp ${currentT} ${currentT} ${tdamp}  x 0.0 0.0 ${pdamp} y 0.0 0.0 ${pdamp}      ##########modify
+#fix 1 all nve
+#fix 2 all temp/rescale 1 ${currentT} ${currentT} 1 1
+#fix 3 all press/berendsen x 0.0 0.0 100 y 0.0 0.0 100 modulus 1000 #making it a little compressed
+fix ave all ave/time 20 100 2000 v_totalE format                    %20.5g
+fix avexx all ave/time 20 100 2000 v_samplepxx format                    %20.5g
+fix aveyy all ave/time 20 100 2000 v_samplepyy format                    %20.5g
+fix avezz all ave/time 20 100 2000 v_samplepzz format                    %20.5g
+
+dump 1 all custom 200 stress_${i}_*.cfg id type x y z
+
+thermo 100 
+thermo_style custom step temp pe lz pzz v_p1 v_totalE
+run 2000 # for dynamical way, need to use more steps and ave/time 1000
+
+print "********sample here"
+
+###################################
+variable avePE equal f_ave
+variable avepxx equal f_avexx
+variable avepyy equal f_aveyy
+variable avepzz equal f_avezz
+
+#variable pxxGPa equal -${avepxx}*1.01325/10000 #atm to Gpa
+#variable pyyGPa equal -${avepyy}*1.01325/10000
+#variable pzzGPa equal -${avepzz}*1.01325/10000
+
+variable pxxGPa equal -${avepxx}/10000 #bar to Gpa
+variable pyyGPa equal -${avepyy}/10000
+variable pzzGPa equal -${avepzz}/10000
+
+print "lz: $(lz) Vol: $(vol) PE: ${avePE}  Pxx: ${pxxGPa} Pyy: ${pyyGPa} Pzz: ${pzzGPa} " append Strain_Stress.dat screen no
+###################################
+unfix 1
+#unfix 2
+#unfix 3
+unfix ave
+unfix avexx
+unfix aveyy
+unfix avezz
+undump 1
+
+write_data  00loop_${i}.data 
+write_restart ../output_restart/00loop_${i}.restart ### 20260615_add
+
+dump 1 all custom 1 00stress_${i}.cfg id type x y z 
+run 0
+undump 1
+shell cd ..
+next i
+jump SELF tension_i
+
+print "Simulation done!!!"
+
