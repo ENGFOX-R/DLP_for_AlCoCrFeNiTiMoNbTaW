@@ -48,9 +48,8 @@ This repository provides the trained Deep Learning Potential (DLP) model, traini
   - Batch size, descriptor parameters, and compression settings.
 
 ### 3. Training Dataset (`DLP/all_npy/`)
-- Contains NumPy-formatted training data associated with the Universal Materials Accelerator (UMA) foundation-model-labeled atomic configurations.
-- Demonstrates the directory hierarchy for all 108 composition systems with a fully populated representative system (`Al7Co7Cr2Fe2Mo2Nb2Ni2Ta2Ti2W4_fcc_bulk-T300-P0`), including `box.raw`, `coord.raw`, `energy.raw`, `force.raw`, `virial.raw`, `type.raw`, and validation sets.
-- Full 54,000-frame database archive can be reproduced using the provided configurations or requested upon need.
+- Contains the complete NumPy/raw-formatted training and validation dataset associated with the Universal Materials Accelerator (UMA) foundation-model-labeled atomic configurations across all 108 composition systems (~54,000 frames total).
+- Each composition system directory includes `box.raw*`, `coord.raw*`, `energy.raw*`, `force.raw*`, `virial.raw*`, `type.raw`, and associated validation splits (`val/`).
 
 ### 4. LAMMPS Tensile Simulation Scripts (`tension/M1/`, `tension/M2/`)
 - Input scripts (`tension_simulation.in`) for uniaxial tensile deformation along the z-direction at 300 K under a constant engineering strain rate of $2.0 \times 10^8\text{ s}^{-1}$.
