@@ -181,8 +181,8 @@ undump 1
 reset_timestep 0
 
 # end of statics way
-fix 1 all nvt temp ${currentT} ${currentT} ${tdamp} #  x 0.0 0.0 ${pdamp} y 0.0 0.0 ${pdamp}      ##########modify
-#fix 1 all npt temp ${currentT} ${currentT} ${tdamp}  x 0.0 0.0 ${pdamp} y 0.0 0.0 ${pdamp}      ##########modify
+#fix 1 all nvt temp ${currentT} ${currentT} ${tdamp} #  x 0.0 0.0 ${pdamp} y 0.0 0.0 ${pdamp}      ##########modify
+fix 1 all npt temp ${currentT} ${currentT} ${tdamp}  x 0.0 0.0 ${pdamp} y 0.0 0.0 ${pdamp}      ##########modify
 #fix 1 all nve
 #fix 2 all temp/rescale 1 ${currentT} ${currentT} 1 1
 #fix 3 all press/berendsen x 0.0 0.0 100 y 0.0 0.0 100 modulus 1000 #making it a little compressed
