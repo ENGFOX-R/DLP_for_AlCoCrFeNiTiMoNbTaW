@@ -2,7 +2,7 @@
 
 This repository provides the trained Deep Learning Potential (DLP) model, training configurations, dataset structure, LAMMPS molecular dynamics simulation scripts, and initial atomic configurations supporting the paper:
 
-> **"Deep Learning Potential Study of MoNbTaW Effects in Ten- and Six-Component FCC Al-Co-Cr-Fe-Ni-Ti Concentrated Alloys"**
+> **"Collective Effects of Dilute Mo, Nb, Ta, and W on Tensile Deformation in FCC Al–Co–Cr–Fe–Mo–Nb–Ni–Ta–Ti–W High-Entropy Alloys Revealed by a Foundation-Model-Distilled Deep Learning Potential"**
 
 ---
 
@@ -48,7 +48,7 @@ This repository provides the trained Deep Learning Potential (DLP) model, traini
   - Batch size, descriptor parameters, and compression settings.
 
 ### 3. Training Dataset (`DLP/all_npy/`)
-- Contains the complete NumPy/raw-formatted training and validation dataset associated with the Universal Materials Accelerator (UMA) foundation-model-labeled atomic configurations across all 108 composition systems (~54,000 frames total).
+- Contains the complete NumPy/raw-formatted training and validation dataset associated with the Universal Models for Atoms (UMA) foundation-model-labeled atomic configurations across all 108 composition systems (~54,000 frames total).
 - Each composition system directory includes `box.raw*`, `coord.raw*`, `energy.raw*`, `force.raw*`, `virial.raw*`, `type.raw`, and associated validation splits (`val/`).
 
 ### 4. LAMMPS Tensile Simulation Scripts (`tension/M1/`, `tension/M2/`)
@@ -87,8 +87,8 @@ This repository provides the trained Deep Learning Potential (DLP) model, traini
 If you use this potential, training data, or simulation setups in your research, please cite:
 
 ```bibtex
-@article{ju2026deep,
-  title={Deep Learning Potential Study of MoNbTaW Effects in Ten- and Six-Component FCC Al-Co-Cr-Fe-Ni-Ti Concentrated Alloys},
+@article{ju2026collective,
+  title={Collective Effects of Dilute Mo, Nb, Ta, and W on Tensile Deformation in FCC Al–Co–Cr–Fe–Mo–Nb–Ni–Ta–Ti–W High-Entropy Alloys Revealed by a Foundation-Model-Distilled Deep Learning Potential},
   author={Ju, Shin-Pon and co-authors},
   journal={Computational Materials Science},
   year={2026}
